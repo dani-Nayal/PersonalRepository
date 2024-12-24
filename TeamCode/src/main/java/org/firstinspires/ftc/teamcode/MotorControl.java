@@ -2,14 +2,21 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.HardwareConfig;
+import org.firstinspires.ftc.teamcode.MotionProfiles;
+import org.firstinspires.ftc.teamcode.MotorEnum;
+import org.firstinspires.ftc.teamcode.PID;
+import org.firstinspires.ftc.teamcode.RobotState;
+
 public class MotorControl {
     HardwareConfig hw;
     RobotState state;
     PID pid;
     MotionProfiles profiles;
     public ElapsedTime timer;
-    double previousLoopTarget = 0;
-    double lastTargetPosition;
+    int previousLoopTarget = 0;
+    int lastTargetPosition;
+    double motorPower;
     public MotorControl(){
         hw = HardwareConfig.getHardwareConfig();
         state = new RobotState();
@@ -19,20 +26,21 @@ public class MotorControl {
     }
     // Meant to be ran in a loop
     public void runTrapezoidalMotorControl(MotorEnum motorEnum){
-        double currentTarget = state.getMotorTarget(motorEnum);
+        int currentTarget = state.getMotorTarget(motorEnum);
 
         if (currentTarget != previousLoopTarget){
-            lastTargetPosition = previousLoopTarget;
+            lastTargetPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
             timer.reset();
         }
+        double distance = currentTarget - lastTargetPosition;
 
         double instantTargetPosition = profiles.runTrapezoidalMotionProfile(
-                hw.getMotorConfig(motorEnum).maxVelocity,
-                hw.getMotorConfig(motorEnum).maxAcceleration,
-                currentTarget - lastTargetPosition,
-                timer.seconds());
+                hw.getMotorConfig(motorEnum).maxVelocity * Math.signum(distance),
+                hw.getMotorConfig(motorEnum).maxAcceleration * Math.signum(distance),
+                distance,
+                timer.seconds()) + lastTargetPosition;
 
-        double motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition);
+        motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition);
 
         hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
 

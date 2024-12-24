@@ -15,7 +15,7 @@ public class TestPID extends LinearOpMode {
     RobotState state;
     public static double KP = 0.0427;
     public static double KI;
-    public static double KD;
+    public static double KD = 0.0005;
     @Override
     public void runOpMode(){
         HardwareConfig.makeHardwareConfig(hardwareMap);

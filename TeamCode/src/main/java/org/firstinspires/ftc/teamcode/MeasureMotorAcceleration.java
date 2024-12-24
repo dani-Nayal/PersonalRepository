@@ -66,7 +66,7 @@ public class MeasureMotorAcceleration extends LinearOpMode {
 
             telemetry.addData("greatest acceleration", greatestAcceleration);
             telemetry.addData("greatest speed", greatestSpeed);
-            telemetry.addData("speed", greatestSpeed);
+            telemetry.addData("speed", currentSpeed);
             telemetry.addData("position", currentEncoderPosition);
             telemetry.addData("acceleration", currentAcceleration);
             telemetry.update();

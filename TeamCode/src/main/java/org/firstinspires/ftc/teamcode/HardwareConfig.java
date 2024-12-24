@@ -15,9 +15,6 @@ import java.util.HashMap;
 // Initializes hardware of all mechanisms, as well as other related values
 public class HardwareConfig {
 
-    public final double ROBOT_LENGTH = 15.0625;
-    public final double ROBOT_WIDTH = 12.4375;
-
     private static HardwareConfig hardwareConfig;
     private final HashMap<MotorEnum,MotorConfig> motorConfigs;
     private final HashMap<ServoEnum,ServoConfig> servoConfigs;
@@ -62,11 +59,13 @@ public class HardwareConfig {
         motorConfigs.put(MotorEnum.MOTOR, new MotorConfig(
                 hardwareMap,
                 "motor-1",
-                0.0427,0,0.0005,
+                0.0427,0,0.000325,
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
                 "BRAKE",
-                2000));
+                2000,
+                277408.169,
+                3160.0));
         // Initialize ServoConfigs
 
         servoConfigs.put(ServoEnum.SERVO, new ServoConfig(
@@ -95,14 +94,15 @@ public class HardwareConfig {
         public int maxTarget;
         public double maxAcceleration;
         public double maxVelocity;
-        public double PPR;
         public MotorConfig(HardwareMap hardwareMap,
                            String deviceName,
                            double kP, double kI, double kD,
                            String runMode,
                            String direction,
                            String zeroPowerBehaviour,
-                           int maxTarget){
+                           int maxTarget,
+                           double maxAcceleration,
+                           double maxVelocity){
 
             this.motor = hardwareMap.dcMotor.get(deviceName);
             this.kP = kP;
@@ -118,7 +118,6 @@ public class HardwareConfig {
             this.maxTarget = maxTarget;
             this.maxAcceleration = maxAcceleration;
             this.maxVelocity = maxVelocity;
-            this.PPR = PPR;
         }
     }
     public static class ServoConfig{
