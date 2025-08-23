@@ -11,11 +11,11 @@ import java.util.List;
 
 public class LLDetectSamples {
     Limelight3A limelight;
-    final double CAMERA_HEIGHT_INCHES = 10.56;
-    final double CAMERA_ANGLE_DEGREES = 25;
+    final double CAMERA_HEIGHT_INCHES;
+    final double CAMERA_ANGLE_DEGREES;
     String queryClassName;
 
-    public LLDetectSamples(String queryClassName, HardwareMap hardwareMap){
+public LLDetectSamples(String queryClassName, HardwareMap hardwareMap, final double CAMERA_VERTICAL_HEIGHT_INCHES, final double CAMERA_DOWNWARD_ANGLE_DEGREES){
         this.queryClassName = queryClassName;
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -23,9 +23,14 @@ public class LLDetectSamples {
         limelight.setPollRateHz(11);
 
         limelight.pipelineSwitch(0);
+
+        this.CAMERA_HEIGHT_INCHES = CAMERA_VERTICAL_HEIGHT_INCHES;
+        this.CAMERA_ANGLE_DEGREES = CAMERA_DOWNWARD_ANGLE_DEGREES;
+
     }
 
     public List<DetectionPose2D> detectSamples(){
+        limelight.pipelineSwitch(0);
         LLResult result = limelight.getLatestResult();
         List<DetectionPose2D> detections = new ArrayList<>();
         if (result != null && result.isValid()){
@@ -59,17 +64,15 @@ public class LLDetectSamples {
                             corners.get(3).get(1)
                     );
                     double orientationDegrees;
+                    double[] pythonOutputs;
 
-                    double[] pythonOutputs = result.getPythonOutput();
-                    if (pythonOutputs != null && pythonOutputs.length > 0){
-                        orientationDegrees = pythonOutputs[0];
-                    }
-                    else{
-                        throw new RuntimeException("No python outputs");
-                    }
+                    do {
+                        pythonOutputs = result.getPythonOutput();
+                    } while (pythonOutputs == null);
+
+                    orientationDegrees = pythonOutputs[0];
+
                     detections.add(new DetectionPose2D(depth, horizontalOffset, className, orientationDegrees));
-                    DetectionPose2D detectionPose2D = new DetectionPose2D(1,1,"1", 1);
-                    detectionPose2D.getX();
                 }
             }
             return detections;
@@ -79,6 +82,10 @@ public class LLDetectSamples {
 
     public void startLLScanning(){
         limelight.start();
+    }
+
+    public Limelight3A getLimelightInstance(){
+        return limelight;
     }
 
 }
