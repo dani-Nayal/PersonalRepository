@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 @Autonomous
 public class TestDetection extends OpMode {
-    // Corners go from
     Limelight3A limelight;
     @Override
     public void init(){

@@ -13,10 +13,10 @@ public class LLDetectSamples {
     Limelight3A limelight;
     final double CAMERA_HEIGHT_INCHES;
     final double CAMERA_ANGLE_DEGREES;
-    String queryClassName;
+    List<String> queryClassNames;
 
-public LLDetectSamples(String queryClassName, HardwareMap hardwareMap, final double CAMERA_VERTICAL_HEIGHT_INCHES, final double CAMERA_DOWNWARD_ANGLE_DEGREES){
-        this.queryClassName = queryClassName;
+public LLDetectSamples(List<String> queryClassNames, HardwareMap hardwareMap, final double CAMERA_VERTICAL_HEIGHT_INCHES, final double CAMERA_DOWNWARD_ANGLE_DEGREES){
+        this.queryClassNames = queryClassNames;
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
@@ -38,17 +38,17 @@ public LLDetectSamples(String queryClassName, HardwareMap hardwareMap, final dou
 
                 String className = detection.getClassName();
 
-                if (className.equals(queryClassName)) {
-                    double ty = -detection.getTargetXDegrees(); // Compensates for camera rotation
-                    double tx = detection.getTargetYDegrees();
+                if ((className.equals("blue") && queryClassNames.contains("blue")) || (className.equals("red") && queryClassNames.contains("red")) || (className.equals("yellow") && queryClassNames.contains("yellow"))) {
+                    double tx = detection.getTargetXDegrees(); // Compensates for camera rotation
+                    double ty = detection.getTargetYDegrees();
                     double trigAngle = CAMERA_ANGLE_DEGREES + ty;
 
                     double radians = Math.toRadians(trigAngle);
-                    radians = Math.max(Math.toRadians(1), radians);
                     double depth = CAMERA_HEIGHT_INCHES / Math.tan(radians);
 
                     double horizontalOffset = depth * Math.tan(Math.toRadians(tx));
 
+                    /*
                     List<List<Double>> corners = detection.getTargetCorners();
 
                     limelight.pipelineSwitch(1);
@@ -72,7 +72,9 @@ public LLDetectSamples(String queryClassName, HardwareMap hardwareMap, final dou
 
                     orientationDegrees = pythonOutputs[0];
 
-                    detections.add(new DetectionPose2D(depth, horizontalOffset, className, orientationDegrees));
+                     */
+
+                    detections.add(new DetectionPose2D(depth, horizontalOffset, className));
                 }
             }
             return detections;
