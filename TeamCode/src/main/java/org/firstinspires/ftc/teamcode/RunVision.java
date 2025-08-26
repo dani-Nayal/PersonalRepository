@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -10,14 +11,16 @@ import java.util.List;
 public class RunVision extends OpMode {
     LLDetectSamples detectorRed;
     final double CAMERA_HEIGHT_INCHES = 10.56;
-    final double CAMERA_ANGLE_DEGREES = 25;
+    final double CAMERA_ANGLE_DEGREES = 65;
     List<String> acceptedClasses = new ArrayList<>();
+    Limelight3A limelight;
     @Override
     public void init(){
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
         acceptedClasses.add("red");
         acceptedClasses.add("blue");
         acceptedClasses.add("yellow");
-        detectorRed = new LLDetectSamples(acceptedClasses, hardwareMap, CAMERA_HEIGHT_INCHES, CAMERA_ANGLE_DEGREES);
+        detectorRed = new LLDetectSamples(acceptedClasses, limelight, CAMERA_HEIGHT_INCHES, CAMERA_ANGLE_DEGREES);
     }
 
     @Override

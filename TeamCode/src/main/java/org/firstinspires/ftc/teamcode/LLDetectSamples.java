@@ -15,10 +15,10 @@ public class LLDetectSamples {
     final double CAMERA_ANGLE_DEGREES;
     List<String> queryClassNames;
 
-public LLDetectSamples(List<String> queryClassNames, HardwareMap hardwareMap, final double CAMERA_VERTICAL_HEIGHT_INCHES, final double CAMERA_DOWNWARD_ANGLE_DEGREES){
+public LLDetectSamples(List<String> queryClassNames, Limelight3A limelight, final double CAMERA_VERTICAL_HEIGHT_INCHES, final double CAMERA_DOWNWARD_ANGLE_DEGREES){
         this.queryClassNames = queryClassNames;
 
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        this.limelight = limelight;
 
         limelight.setPollRateHz(11);
 
@@ -41,10 +41,9 @@ public LLDetectSamples(List<String> queryClassNames, HardwareMap hardwareMap, fi
                 if ((className.equals("blue") && queryClassNames.contains("blue")) || (className.equals("red") && queryClassNames.contains("red")) || (className.equals("yellow") && queryClassNames.contains("yellow"))) {
                     double tx = detection.getTargetXDegrees(); // Compensates for camera rotation
                     double ty = detection.getTargetYDegrees();
-                    double trigAngle = CAMERA_ANGLE_DEGREES + ty;
+                    double verticalAngle = CAMERA_ANGLE_DEGREES + ty;
 
-                    double radians = Math.toRadians(trigAngle);
-                    double depth = CAMERA_HEIGHT_INCHES / Math.tan(radians);
+                    double depth = CAMERA_HEIGHT_INCHES * Math.tan(Math.toRadians(verticalAngle));
 
                     double horizontalOffset = depth * Math.tan(Math.toRadians(tx));
 
@@ -84,10 +83,6 @@ public LLDetectSamples(List<String> queryClassNames, HardwareMap hardwareMap, fi
 
     public void startLLScanning(){
         limelight.start();
-    }
-
-    public Limelight3A getLimelightInstance(){
-        return limelight;
     }
 
 }
