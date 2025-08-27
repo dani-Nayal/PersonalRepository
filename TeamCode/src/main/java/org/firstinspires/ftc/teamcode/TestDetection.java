@@ -25,6 +25,8 @@ public class TestDetection extends OpMode {
         if (result != null && result.isValid()){
             for (LLResultTypes.DetectorResult detection : result.getDetectorResults()){
                 num_detections++;
+                telemetry.addData("tx", detection.getTargetXDegrees());
+                telemetry.addData("ty", detection.getTargetYDegrees());
             }
         }
         else {

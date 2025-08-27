@@ -30,13 +30,14 @@ public class RunVision extends OpMode {
 
     @Override
     public void loop(){
-        List<DetectionPose2D> results = detectorRed.detectSamples();
+        List<DetectionDescriptor> results = detectorRed.detectSamples();
 
         if (results != null){
-            for (DetectionPose2D result : results) {
+            for (DetectionDescriptor result : results) {
                 telemetry.addData("name", result.getClassName());
                 telemetry.addData("x", result.getX());
                 telemetry.addData("y", result.getY());
+                telemetry.addData("degrees", result.getOrientationDegrees());
             }
         }
         else {

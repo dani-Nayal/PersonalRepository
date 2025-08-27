@@ -4,8 +4,6 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +13,7 @@ public class LLDetectSamples {
     final double CAMERA_ANGLE_DEGREES;
     List<String> queryClassNames;
 
-public LLDetectSamples(List<String> queryClassNames, Limelight3A limelight, final double CAMERA_VERTICAL_HEIGHT_INCHES, final double CAMERA_DOWNWARD_ANGLE_DEGREES){
+    public LLDetectSamples(List<String> queryClassNames, Limelight3A limelight, final double CAMERA_VERTICAL_HEIGHT_INCHES, final double CAMERA_DOWNWARD_ANGLE_DEGREES){
         this.queryClassNames = queryClassNames;
 
         this.limelight = limelight;
@@ -29,54 +27,63 @@ public LLDetectSamples(List<String> queryClassNames, Limelight3A limelight, fina
 
     }
 
-    public List<DetectionPose2D> detectSamples(){
-        limelight.pipelineSwitch(0);
+    public List<DetectionDescriptor> detectSamples(){
+        List<DetectionDescriptor> detectionDescriptors = new ArrayList<>(); // Output array
         LLResult result = limelight.getLatestResult();
-        List<DetectionPose2D> detections = new ArrayList<>();
         if (result != null && result.isValid()){
-            for (LLResultTypes.DetectorResult detection : result.getDetectorResults()){
-
-                String className = detection.getClassName();
+            for (LLResultTypes.DetectorResult detectorResult : result.getDetectorResults()){
+                String className = detectorResult.getClassName();
 
                 if ((className.equals("blue") && queryClassNames.contains("blue")) || (className.equals("red") && queryClassNames.contains("red")) || (className.equals("yellow") && queryClassNames.contains("yellow"))) {
-                    double tx = detection.getTargetXDegrees(); // Compensates for camera rotation
-                    double ty = detection.getTargetYDegrees();
+                    double tx = detectorResult.getTargetXDegrees();
+                    double ty = detectorResult.getTargetYDegrees();
                     double verticalAngle = CAMERA_ANGLE_DEGREES + ty;
 
                     double depth = CAMERA_HEIGHT_INCHES * Math.tan(Math.toRadians(verticalAngle));
 
                     double horizontalOffset = depth * Math.tan(Math.toRadians(tx));
 
-                    /*
-                    List<List<Double>> corners = detection.getTargetCorners();
+                    List<List<Double>> corners = detectorResult.getTargetCorners();
 
-                    limelight.pipelineSwitch(1);
-
-                    limelight.updatePythonInputs(
-                            corners.get(0).get(0),
-                            corners.get(0).get(1),
-                            corners.get(1).get(0),
-                            corners.get(1).get(1),
-                            corners.get(2).get(0),
-                            corners.get(2).get(1),
-                            corners.get(3).get(0),
-                            corners.get(3).get(1)
-                    );
-                    double orientationDegrees;
-                    double[] pythonOutputs;
-
-                    do {
-                        pythonOutputs = result.getPythonOutput();
-                    } while (pythonOutputs == null);
-
-                    orientationDegrees = pythonOutputs[0];
-
-                     */
-
-                    detections.add(new DetectionPose2D(depth, horizontalOffset, className));
+                    DetectionDescriptor detection = new DetectionDescriptor();
+                    detection.setTx(tx);
+                    detection.setTy(ty);
+                    detection.setX(horizontalOffset);
+                    detection.setY(depth);
+                    detection.setCorners(corners);
+                    detection.setClassName(className);
+                    detectionDescriptors.add(detection);
                 }
             }
-            return detections;
+            limelight.pipelineSwitch(1);
+
+            for (DetectionDescriptor detectionDescriptor : detectionDescriptors){
+                List<List<Double>> corners = detectionDescriptor.getCorners();
+
+                limelight.updatePythonInputs(
+                        corners.get(0).get(0),
+                        corners.get(0).get(1),
+                        corners.get(1).get(0),
+                        corners.get(1).get(1),
+                        corners.get(2).get(0),
+                        corners.get(2).get(1),
+                        corners.get(3).get(0),
+                        corners.get(3).get(1)
+                );
+
+                double orientationDegrees;
+                double[] pythonOutputs;
+
+                do {
+                    pythonOutputs = result.getPythonOutput();
+                } while (pythonOutputs == null);
+
+                orientationDegrees = pythonOutputs[0];
+                detectionDescriptor.setOrientationDegrees(orientationDegrees);
+            }
+
+
+            return detectionDescriptors;
         }
         return null;
     }
