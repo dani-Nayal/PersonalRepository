@@ -34,7 +34,36 @@ public class LLDetectSamples {
             for (LLResultTypes.DetectorResult detectorResult : result.getDetectorResults()){
                 String className = detectorResult.getClassName();
 
-                if ((className.equals("blue") && queryClassNames.contains("blue")) || (className.equals("red") && queryClassNames.contains("red")) || (className.equals("yellow") && queryClassNames.contains("yellow"))) {
+                if (queryClassNames.contains(className)) {
+                    double tx = detectorResult.getTargetXDegrees();
+                    double ty = detectorResult.getTargetYDegrees();
+                    double verticalAngle = CAMERA_ANGLE_DEGREES + ty;
+
+                    double depth = CAMERA_HEIGHT_INCHES * Math.tan(Math.toRadians(verticalAngle));
+
+                    double horizontalOffset = depth * Math.tan(Math.toRadians(tx));
+
+                    DetectionDescriptor detection = new DetectionDescriptor();
+                    detection.setTx(tx);
+                    detection.setTy(ty);
+                    detection.setX(horizontalOffset);
+                    detection.setY(depth);
+                    detection.setClassName(className);
+                    detectionDescriptors.add(detection);
+                }
+            }
+            return detectionDescriptors;
+        }
+        return null;
+    }
+    public List<DetectionDescriptor> detectSamplesWithOrientation(){
+        List<DetectionDescriptor> detectionDescriptors = new ArrayList<>(); // Output array
+        LLResult result = limelight.getLatestResult();
+        if (result != null && result.isValid()){
+            for (LLResultTypes.DetectorResult detectorResult : result.getDetectorResults()){
+                String className = detectorResult.getClassName();
+
+                if (queryClassNames.contains(className)) {
                     double tx = detectorResult.getTargetXDegrees();
                     double ty = detectorResult.getTargetYDegrees();
                     double verticalAngle = CAMERA_ANGLE_DEGREES + ty;

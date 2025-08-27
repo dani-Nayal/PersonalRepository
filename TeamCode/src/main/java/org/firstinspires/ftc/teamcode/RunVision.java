@@ -34,10 +34,9 @@ public class RunVision extends OpMode {
 
         if (results != null){
             for (DetectionDescriptor result : results) {
-                telemetry.addData("name", result.getClassName());
+                telemetry.addData("class", result.getClassName());
                 telemetry.addData("x", result.getX());
                 telemetry.addData("y", result.getY());
-                telemetry.addData("degrees", result.getOrientationDegrees());
             }
         }
         else {
