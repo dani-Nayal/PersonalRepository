@@ -12,6 +12,11 @@ public class RunVision extends OpMode {
     LLDetectSamples detectorRed;
     final double CAMERA_HEIGHT_INCHES = 5;
     final double CAMERA_ANGLE_DEGREES = 65;
+    final double[][] K = {
+        {1218.145, 0.0, 621.829},
+        {0.0, 1219.481, 500.362},
+        {0.0, 0.0, 1.0}
+    };
     List<String> acceptedClasses = new ArrayList<>();
     Limelight3A limelight;
     @Override
@@ -20,7 +25,7 @@ public class RunVision extends OpMode {
         acceptedClasses.add("red");
         acceptedClasses.add("blue");
         acceptedClasses.add("yellow");
-        detectorRed = new LLDetectSamples(acceptedClasses, limelight, CAMERA_HEIGHT_INCHES, CAMERA_ANGLE_DEGREES);
+        detectorRed = new LLDetectSamples(acceptedClasses, hardwareMap, CAMERA_HEIGHT_INCHES, CAMERA_ANGLE_DEGREES, K);
     }
 
     @Override

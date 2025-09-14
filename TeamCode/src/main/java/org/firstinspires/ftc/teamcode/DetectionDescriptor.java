@@ -9,9 +9,8 @@ public class DetectionDescriptor {
     String className;
     double x;
     double y;
-    double orientationDegrees;
     List<List<Double>> corners;
-
+    double[] data = new double[10];
     public double getTx() {
         return tx;
     }
@@ -51,15 +50,7 @@ public class DetectionDescriptor {
     public void setY(double y) {
         this.y = y;
     }
-
-    public double getOrientationDegrees() {
-        return orientationDegrees;
-    }
-
-    public void setOrientationDegrees(double orientationDegrees) {
-        this.orientationDegrees = orientationDegrees;
-    }
-
+    public double[] getData(){return data;}
     public List<List<Double>> getCorners() {
         return corners;
     }

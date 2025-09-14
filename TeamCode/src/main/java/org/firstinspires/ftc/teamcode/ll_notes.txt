@@ -1,11 +1,11 @@
 Corners go from bottom left of detection contour going counter-clockwise
 
 
-corner4           corner3
+corner3           corner2
 
 
 
-corner1           corner2
+corner0           corner1
 
 ty is positive when target is under crosshair
 

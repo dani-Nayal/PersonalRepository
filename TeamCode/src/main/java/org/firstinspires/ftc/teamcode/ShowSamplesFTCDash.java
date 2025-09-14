@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -14,18 +13,21 @@ import java.util.List;
 public class ShowSamplesFTCDash extends OpMode {
     double SAMPLE_LENGTH = 3.5;
     double SAMPLE_WIDTH = 1.5;
+    final double[][] K = {
+            {1218.145, 0.0, 621.829},
+            {0.0, 1219.481, 500.362},
+            {0.0, 0.0, 1.0}
+    };
     FtcDashboard ftcDashboard;
     LLDetectSamples detector;
-    Limelight3A limelight;
     @Override
     public void init(){
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
         List<String> queryClassNames = new ArrayList<>();
         queryClassNames.add("red");
         queryClassNames.add("blue");
         queryClassNames.add("yellow");
         ftcDashboard = FtcDashboard.getInstance();
-        detector = new LLDetectSamples(queryClassNames, limelight, 5, 65);
+        detector = new LLDetectSamples(queryClassNames, hardwareMap, 5, 65, K);
     }
     @Override
     public void start(){
@@ -52,13 +54,14 @@ public class ShowSamplesFTCDash extends OpMode {
                 packet.put("y", detection.getY());
                 packet.put("tx", detection.getTx());
                 packet.put("ty", detection.getTy());
+                packet.put("corners", detection.getCorners());
+                packet.put("target pixels x", detection.getData()[0]);
+                packet.put("target pixels y", detection.getData()[1]);
             }
             ftcDashboard.sendTelemetryPacket(packet);
         }
         else{
             packet.addLine("nothing detected");
         }
-
     }
-
 }
