@@ -10,7 +10,7 @@ import java.util.List;
 @Autonomous
 public class RunVision extends OpMode {
     LLDetectSamples detectorRed;
-    final double CAMERA_HEIGHT_INCHES = 10.56;
+    final double CAMERA_HEIGHT_INCHES = 5;
     final double CAMERA_ANGLE_DEGREES = 65;
     List<String> acceptedClasses = new ArrayList<>();
     Limelight3A limelight;
@@ -37,6 +37,8 @@ public class RunVision extends OpMode {
                 telemetry.addData("class", result.getClassName());
                 telemetry.addData("x", result.getX());
                 telemetry.addData("y", result.getY());
+                telemetry.addData("tx", result.getTx());
+                telemetry.addData("ty", result.getTy());
             }
         }
         else {

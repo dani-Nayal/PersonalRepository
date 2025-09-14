@@ -1,8 +1,0 @@
-Corners go from bottom left of detection contour going counter-clockwise
-
-
-corner4           corner3
-
-
-
-corner1           corner2
