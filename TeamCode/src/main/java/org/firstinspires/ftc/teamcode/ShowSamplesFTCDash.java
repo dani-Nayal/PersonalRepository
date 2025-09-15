@@ -13,11 +13,6 @@ import java.util.List;
 public class ShowSamplesFTCDash extends OpMode {
     double SAMPLE_LENGTH = 3.5;
     double SAMPLE_WIDTH = 1.5;
-    final double[][] K = {
-            {1218.145, 0.0, 621.829},
-            {0.0, 1219.481, 500.362},
-            {0.0, 0.0, 1.0}
-    };
     FtcDashboard ftcDashboard;
     LLDetectSamples detector;
     @Override
@@ -27,7 +22,7 @@ public class ShowSamplesFTCDash extends OpMode {
         queryClassNames.add("blue");
         queryClassNames.add("yellow");
         ftcDashboard = FtcDashboard.getInstance();
-        detector = new LLDetectSamples(queryClassNames, hardwareMap, 5, 65, K);
+        detector = new LLDetectSamples(queryClassNames, hardwareMap, 5, 65);
     }
     @Override
     public void start(){
@@ -57,6 +52,8 @@ public class ShowSamplesFTCDash extends OpMode {
                 packet.put("corners", detection.getCorners());
                 packet.put("target pixels x", detection.getData()[0]);
                 packet.put("target pixels y", detection.getData()[1]);
+                packet.put("cx", detection.getData()[2]);
+                packet.put("cy", detection.getData()[3]);
             }
             ftcDashboard.sendTelemetryPacket(packet);
         }

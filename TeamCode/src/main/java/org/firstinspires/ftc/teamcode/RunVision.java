@@ -25,7 +25,7 @@ public class RunVision extends OpMode {
         acceptedClasses.add("red");
         acceptedClasses.add("blue");
         acceptedClasses.add("yellow");
-        detectorRed = new LLDetectSamples(acceptedClasses, hardwareMap, CAMERA_HEIGHT_INCHES, CAMERA_ANGLE_DEGREES, K);
+        detectorRed = new LLDetectSamples(acceptedClasses, hardwareMap, CAMERA_HEIGHT_INCHES, CAMERA_ANGLE_DEGREES);
     }
 
     @Override
