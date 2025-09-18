@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.vision.descriptors;
 
 import java.util.List;
 
 public class DetectionDescriptor {
-
     double tx;
     double ty;
     String className;
-    double x;
-    double y;
+    public double x;
+    public double y;
     List<List<Double>> corners;
+    double[] targetPixels = new double[2];
     double[] data = new double[10];
     public double getTx() {
         return tx;
@@ -54,8 +54,18 @@ public class DetectionDescriptor {
     public List<List<Double>> getCorners() {
         return corners;
     }
-
     public void setCorners(List<List<Double>> corners) {
         this.corners = corners;
     }
+    public double[] getTargetPixels(){
+        return targetPixels;
+    }
+    public void setTargetPixels(double x, double y){
+        targetPixels[0] = x;
+        targetPixels[1] = y;
+    }
+    public void setTargetPixels(double[] targetPixels){
+        this.targetPixels = targetPixels;
+    }
+
 }

@@ -1,17 +1,18 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.vision.testing;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.vision.pipelines.FindArtifactRelativePositions;
+import org.firstinspires.ftc.teamcode.vision.descriptors.DetectionDescriptor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous
-public class RunVision extends OpMode {
-    LLDetectSamples detectorRed;
-    final double CAMERA_HEIGHT_INCHES = 5;
-    final double CAMERA_ANGLE_DEGREES = 65;
+public class TestArtifactPositions extends OpMode {
+    FindArtifactRelativePositions detector;
     final double[][] K = {
         {1218.145, 0.0, 621.829},
         {0.0, 1219.481, 500.362},
@@ -25,17 +26,12 @@ public class RunVision extends OpMode {
         acceptedClasses.add("red");
         acceptedClasses.add("blue");
         acceptedClasses.add("yellow");
-        detectorRed = new LLDetectSamples(acceptedClasses, hardwareMap, CAMERA_HEIGHT_INCHES, CAMERA_ANGLE_DEGREES);
-    }
-
-    @Override
-    public void start(){
-        detectorRed.startLLScanning();
+        detector = new FindArtifactRelativePositions(acceptedClasses, limelight, 5, 0, 0, 65, K);
     }
 
     @Override
     public void loop(){
-        List<DetectionDescriptor> results = detectorRed.detectSamples();
+        List<DetectionDescriptor> results = detector.getDetectionDescriptors();
 
         if (results != null){
             for (DetectionDescriptor result : results) {
@@ -44,6 +40,8 @@ public class RunVision extends OpMode {
                 telemetry.addData("y", result.getY());
                 telemetry.addData("tx", result.getTx());
                 telemetry.addData("ty", result.getTy());
+                telemetry.addData("target pixels x", result.getTargetPixels()[0]);
+                telemetry.addData("target pixels y", result.getTargetPixels()[1]);
             }
         }
         else {
