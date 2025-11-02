@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.vision;
 
 import  com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.vision.descriptors.AprilTagDescriptor;
 import org.firstinspires.ftc.teamcode.vision.descriptors.DetectionDescriptor;
+import org.firstinspires.ftc.teamcode.vision.pipelines.BotPoseMT2;
 import org.firstinspires.ftc.teamcode.vision.pipelines.FindArtifactRelativePositions;
 import org.firstinspires.ftc.teamcode.vision.pipelines.TxTyAprilTag;
 
@@ -28,10 +31,13 @@ public class VisionManager {
     };
     FindArtifactRelativePositions artifactDetector;
     TxTyAprilTag aprilTagDetector;
+    BotPoseMT2 llLocalizer;
     Limelight3A limelight;
+    IMU imu;
     List<String> queryClasses = new ArrayList<>();
     public VisionManager(HardwareMap hardwareMap){
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        imu = hardwareMap.get(IMU.class, "imu");
         queryClasses.add("purple");
         queryClasses.add("green");
         artifactDetector = new FindArtifactRelativePositions(
@@ -42,13 +48,21 @@ public class VisionManager {
                 CAMERA_DOWNWARD_PITCH_DEGREES,
                 K);
         aprilTagDetector = new TxTyAprilTag(limelight);
+        llLocalizer = new BotPoseMT2(limelight, imu);
     }
 
-    public List<DetectionDescriptor> getArtifactsRelativePosition(){ // Returns a list of all detections from a single frame
+    public List<DetectionDescriptor> getDetectionDescriptors(){ // Returns a list of all detections from a single frame
         return artifactDetector.getDetectionDescriptors();
     }
 
-    public List<AprilTagDescriptor> getTxTy(){ // Returns a list of all detections from a single frame
+    public Pose3D getBotPose(){
+        return llLocalizer.getBotPoseMT2();
+    }
+
+    public List<AprilTagDescriptor> getAprilTagDescriptors(){ // Returns a list of all detections from a single frame
         return aprilTagDetector.getAprilTagDescriptors();
+    }
+    public void startLimelight(){
+        limelight.start();
     }
 }

@@ -42,9 +42,6 @@ public class FindArtifactRelativePositions {
     }
 
     public List<DetectionDescriptor> getDetectionDescriptors(){
-        if (!limelight.isRunning()){
-            limelight.start();
-        }
         List<DetectionDescriptor> detectionDescriptors = new ArrayList<>(); // Output array
         LLResult result = limelight.getLatestResult();
         if (result != null && result.isValid()){
