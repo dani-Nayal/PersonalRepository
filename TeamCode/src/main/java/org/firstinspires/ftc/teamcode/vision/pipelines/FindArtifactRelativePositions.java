@@ -72,8 +72,6 @@ public class FindArtifactRelativePositions {
                     detection.setTargetPixels(targetLocationPixels);
                     detectionDescriptors.add(detection);
 
-                    detection.getData()[0] = K[0][2];
-                    detection.getData()[1] = K[1][2];
                 }
             }
             return detectionDescriptors;

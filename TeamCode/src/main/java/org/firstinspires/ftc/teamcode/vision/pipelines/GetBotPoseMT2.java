@@ -6,10 +6,10 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
-public class BotPoseMT2 {
+public class GetBotPoseMT2 {
     Limelight3A limelight;
     IMU imu;
-    public BotPoseMT2(Limelight3A limelight, IMU imu){
+    public GetBotPoseMT2(Limelight3A limelight, IMU imu){
         this.limelight = limelight;
         this.imu = imu;
 

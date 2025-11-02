@@ -1,4 +1,3 @@
-Corners go from bottom left of detection contour going counter-clockwise
 
 x --> Increases from top left to the right
 y
@@ -7,6 +6,7 @@ y
 |
 V
 Increases from top left down
+
 corner0           corner1
 
 
