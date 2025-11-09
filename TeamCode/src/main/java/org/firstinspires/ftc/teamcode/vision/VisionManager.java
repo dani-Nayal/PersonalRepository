@@ -23,7 +23,7 @@ public class VisionManager {
     final double CAMERA_OFFSET_Y_INCHES = 0; // Increases forward from the reference point
     final double CAMERA_DOWNWARD_PITCH_DEGREES = 65; // 90 degrees is facing straight forward, decreases looking down
     final int NN_PIPELINE_INDEX = 0;
-    final int APRIL_TAGS_PIPELINE_INDEX
+    final int APRIL_TAGS_PIPELINE_INDEX = 2;
     double fx = 1218.145;
     double fy = 1219.481;
     double cx = 621.829;
@@ -81,13 +81,22 @@ public class VisionManager {
     }
 
     public String getCurrentPipeline(){
+        int index = -1;
         if (!limelight.isRunning()){
             limelight.start();
         }
         LLResult result = limelight.getLatestResult();
         if (result != null && result.isValid()){
-            result.getPipelineIndex();
+            index = result.getPipelineIndex();
         }
-
+        if (index == 0){
+            return "Neural Network";
+        }
+        else if (index == 2){
+            return "April Tag";
+        }
+        else {
+            return "No pipeline selected";
+        }
     }
 }
