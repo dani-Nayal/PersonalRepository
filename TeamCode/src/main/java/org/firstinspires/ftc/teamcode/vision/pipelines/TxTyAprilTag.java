@@ -19,10 +19,7 @@ public class TxTyAprilTag {
         LLResult result = limelight.getLatestResult();
         if (result != null && result.isValid()){
             for (LLResultTypes.FiducialResult fiducialResult : result.getFiducialResults()){
-                AprilTagDescriptor aprilTagDescriptor = new AprilTagDescriptor();
-                aprilTagDescriptor.setId(fiducialResult.getFiducialId());
-                aprilTagDescriptor.setTx(fiducialResult.getTargetXDegrees());
-                aprilTagDescriptor.setTy(fiducialResult.getTargetYDegrees());
+                AprilTagDescriptor aprilTagDescriptor = new AprilTagDescriptor(fiducialResult.getTargetXDegrees(), fiducialResult.getTargetYDegrees(), fiducialResult.getFiducialId());
                 aprilTagDescriptors.add(aprilTagDescriptor);
             }
             return aprilTagDescriptors;

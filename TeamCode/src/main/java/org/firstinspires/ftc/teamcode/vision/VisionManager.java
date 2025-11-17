@@ -63,6 +63,8 @@ public class VisionManager {
         return artifactDetector.getDetectionDescriptors();
     }
 
+    public
+
     public Pose3D getBotPose(){
         if (!limelight.isRunning()){
             limelight.start();
