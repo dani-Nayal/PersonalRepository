@@ -6,8 +6,8 @@ public class DetectionDescriptor {
     double tx;
     double ty;
     String className;
-    public double x;
-    public double y;
+    public double xOffset;
+    public double yOffset;
     List<List<Double>> corners;
     double[] targetPixels = new double[2];
     double[] data = new double[10];
@@ -35,20 +35,20 @@ public class DetectionDescriptor {
         this.className = className;
     }
 
-    public double getX() {
-        return x;
+    public double getXOffset() {
+        return xOffset;
     }
 
-    public void setX(double x) {
-        this.x = x;
+    public void setXOffset(double xOffset) {
+        this.xOffset = xOffset;
     }
 
-    public double getY() {
-        return y;
+    public double getYOffset() {
+        return yOffset;
     }
 
-    public void setY(double y) {
-        this.y = y;
+    public void setYOffset(double y) {
+        this.yOffset = y;
     }
     public double[] getData(){return data;}
     public List<List<Double>> getCorners() {

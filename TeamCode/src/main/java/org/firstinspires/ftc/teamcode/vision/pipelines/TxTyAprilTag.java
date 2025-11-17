@@ -13,8 +13,6 @@ public class TxTyAprilTag {
     Limelight3A limelight;
     public TxTyAprilTag(Limelight3A limelight){
         this.limelight = limelight;
-        limelight.setPollRateHz(11);
-        limelight.pipelineSwitch(3);
     }
     public List<AprilTagDescriptor> getAprilTagDescriptors(){
         List<AprilTagDescriptor> aprilTagDescriptors = new ArrayList<>();

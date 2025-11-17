@@ -27,6 +27,8 @@ public class TestResult extends OpMode {
             for (LLResultTypes.DetectorResult detection : result.getDetectorResults()){
                 telemetry.addData("tx", detection.getTargetXDegrees());
                 telemetry.addData("ty", detection.getTargetYDegrees());
+                telemetry.addData("pipeline index", result.getPipelineIndex());
+                telemetry.addData("class name", detection.getClassName());
             }
         }
         else {
@@ -34,7 +36,6 @@ public class TestResult extends OpMode {
             telemetry.addData("null", result == null);
             telemetry.addData("is running", limelight.isRunning());
         }
-
         telemetry.update();
     }
 

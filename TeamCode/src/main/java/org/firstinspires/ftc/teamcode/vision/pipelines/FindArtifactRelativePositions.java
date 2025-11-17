@@ -35,46 +35,44 @@ public class FindArtifactRelativePositions {
         this.CAMERA_DOWNWARD_ANGLE_DEGREES = CAMERA_DOWNWARD_ANGLE_DEGREES;
 
         this.K = K;
-
-        limelight.setPollRateHz(11);
-
-        limelight.pipelineSwitch(0);
     }
 
     public List<DetectionDescriptor> getDetectionDescriptors(){
         List<DetectionDescriptor> detectionDescriptors = new ArrayList<>(); // Output array
         LLResult result = limelight.getLatestResult();
-        if (result != null && result.isValid()){
-            for (LLResultTypes.DetectorResult detectorResult : result.getDetectorResults()){
-                String className = detectorResult.getClassName();
 
-                if (queryClassNames.contains(className)) {
-                    List<List<Double>> corners = detectorResult.getTargetCorners();
-                    double[] targetLocationPixels = new double[2];
-                    targetLocationPixels[0] = (corners.get(2).get(0) + corners.get(3).get(0)) / 2; // We want the target to be the bottom center of the bounding box
-                    targetLocationPixels[1] = (corners.get(3).get(1));
-
-                    double tx = Math.toDegrees(Math.atan2(targetLocationPixels[0] - K[0][2], K[0][0]));
-                    double ty = Math.toDegrees(Math.atan2(K[2][2] - targetLocationPixels[1], K[1][1])); // Y dimension of camera increases downward
-                    double verticalAngle = CAMERA_DOWNWARD_ANGLE_DEGREES + ty;
-
-                    double depth = CAMERA_VERTICAL_HEIGHT_INCHES * Math.tan(Math.toRadians(verticalAngle)) + CAMERA_OFFSET_Y_INCHES;
-
-                    double horizontalOffset = depth * Math.tan(Math.toRadians(tx)) + CAMERA_OFFSET_X_INCHES;
-
-                    DetectionDescriptor detection = new DetectionDescriptor();
-                    detection.setTx(tx);
-                    detection.setTy(ty);
-                    detection.setX(horizontalOffset);
-                    detection.setY(depth);
-                    detection.setClassName(className);
-                    detection.setCorners(corners);
-                    detection.setTargetPixels(targetLocationPixels);
-                    detectionDescriptors.add(detection);
-                }
-            }
+        if (result == null || !result.isValid()){
             return detectionDescriptors;
         }
-        return null;
+
+        for (LLResultTypes.DetectorResult detectorResult : result.getDetectorResults()){
+            String className = detectorResult.getClassName();
+
+            if (queryClassNames.contains(className)) {
+                List<List<Double>> corners = detectorResult.getTargetCorners();
+                double[] targetLocationPixels = new double[2];
+                targetLocationPixels[0] = (corners.get(2).get(0) + corners.get(3).get(0)) / 2; // We want the target to be the bottom center of the bounding box
+                targetLocationPixels[1] = (corners.get(3).get(1));
+
+                double tx = Math.toDegrees(Math.atan2(targetLocationPixels[0] - K[0][2], K[0][0]));
+                double ty = Math.toDegrees(Math.atan2(K[2][2] - targetLocationPixels[1], K[1][1])); // Y dimension of camera increases downward
+                double verticalAngle = CAMERA_DOWNWARD_ANGLE_DEGREES + ty;
+
+                double depth = CAMERA_VERTICAL_HEIGHT_INCHES * Math.tan(Math.toRadians(verticalAngle)) + CAMERA_OFFSET_Y_INCHES + 2.5; // 2.5 is to find the location of the center of the artifact
+
+                double horizontalOffset = depth * Math.tan(Math.toRadians(tx)) + CAMERA_OFFSET_X_INCHES;
+
+                DetectionDescriptor detection = new DetectionDescriptor();
+                detection.setTx(tx);
+                detection.setTy(ty);
+                detection.setXOffset(horizontalOffset);
+                detection.setYOffset(depth);
+                detection.setClassName(className);
+                detection.setCorners(corners);
+                detection.setTargetPixels(targetLocationPixels);
+                detectionDescriptors.add(detection);
+            }
+        }
+        return detectionDescriptors;
     }
 }

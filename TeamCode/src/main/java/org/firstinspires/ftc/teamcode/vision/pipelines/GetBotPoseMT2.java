@@ -12,10 +12,6 @@ public class GetBotPoseMT2 {
     public GetBotPoseMT2(Limelight3A limelight, IMU imu){
         this.limelight = limelight;
         this.imu = imu;
-
-        limelight.setPollRateHz(11);
-
-        limelight.pipelineSwitch(2); /** TODO: Find if index is correct and make pipeline **/
     }
     public Pose3D getBotPoseMT2(){
         double robotYaw = imu.getRobotYawPitchRollAngles().getYaw();

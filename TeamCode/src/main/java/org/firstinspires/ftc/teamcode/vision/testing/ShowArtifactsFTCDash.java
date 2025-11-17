@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode.vision.testing;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.vision.VisionManager;
-import org.firstinspires.ftc.teamcode.vision.pipelines.FindArtifactRelativePositions;
 import org.firstinspires.ftc.teamcode.vision.descriptors.DetectionDescriptor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous
@@ -31,24 +28,25 @@ public class ShowArtifactsFTCDash extends OpMode {
         TelemetryPacket packet = new TelemetryPacket();
         Canvas fieldOverlay = packet.fieldOverlay();
 
-        if (detections != null) {
-            for (DetectionDescriptor detection : detections){
-                fieldOverlay.setFill(detection.getClassName());
-                fieldOverlay.fillCircle(detection.x, detection.y, ARTIFACT_DIAMETER_INCHES / 2);
+        fieldOverlay.setFill("black");
+        fieldOverlay.fillRect(-5,3, 6, 10);
 
-                packet.put("class", detection.getClassName());
-                packet.put("x", detection.getX());
-                packet.put("y", detection.getY());
-                packet.put("tx", detection.getTx());
-                packet.put("ty", detection.getTy());
-                packet.put("corners", detection.getCorners());
-                packet.put("cx", detection.getData()[0]);
-                packet.put("cy", detection.getData()[1]);
-            }
-            ftcDashboard.sendTelemetryPacket(packet);
+        if (detections.isEmpty()){
+            packet.addLine("No detections");
         }
-        else{
-            packet.addLine("nothing detected");
+        for (DetectionDescriptor detection : detections){
+            fieldOverlay.setFill(detection.getClassName());
+            fieldOverlay.fillCircle(detection.xOffset, detection.yOffset, ARTIFACT_DIAMETER_INCHES / 2);
+
+            packet.put("class", detection.getClassName());
+            packet.put("xOffset", detection.getXOffset());
+            packet.put("yOffset", detection.getYOffset());
+            packet.put("tx", detection.getTx());
+            packet.put("ty", detection.getTy());
+            packet.put("corners", detection.getCorners());
+            packet.put("cx", detection.getData()[0]);
+            packet.put("cy", detection.getData()[1]);
         }
+        ftcDashboard.sendTelemetryPacket(packet);
     }
 }

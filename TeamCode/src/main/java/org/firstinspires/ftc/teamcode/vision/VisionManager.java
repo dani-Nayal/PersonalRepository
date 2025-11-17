@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import  com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -60,6 +59,7 @@ public class VisionManager {
         if (!limelight.isRunning()){
             limelight.start();
         }
+        limelight.pipelineSwitch(NN_PIPELINE_INDEX);
         return artifactDetector.getDetectionDescriptors();
     }
 
@@ -74,6 +74,7 @@ public class VisionManager {
         if (!limelight.isRunning()){
             limelight.start();
         }
+        limelight.pipelineSwitch(APRIL_TAGS_PIPELINE_INDEX);
         return aprilTagDetector.getAprilTagDescriptors();
     }
     public void stopLimelight(){
@@ -89,8 +90,8 @@ public class VisionManager {
 
             int index = result.getPipelineIndex();
 
-            if (index == 0) return "Neural Network";
-            else if (index == 2) return "April Tag";
+            if (index == NN_PIPELINE_INDEX) return "Neural Network";
+            else if (index == APRIL_TAGS_PIPELINE_INDEX) return "April Tag";
             else return "Unknown Pipeline";
         }
 
