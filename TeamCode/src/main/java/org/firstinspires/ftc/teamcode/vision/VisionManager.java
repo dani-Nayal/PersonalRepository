@@ -81,22 +81,19 @@ public class VisionManager {
     }
 
     public String getCurrentPipeline(){
-        int index = -1;
         if (!limelight.isRunning()){
             limelight.start();
         }
         LLResult result = limelight.getLatestResult();
         if (result != null && result.isValid()){
-            index = result.getPipelineIndex();
+
+            int index = result.getPipelineIndex();
+
+            if (index == 0) return "Neural Network";
+            else if (index == 2) return "April Tag";
+            else return "Unknown Pipeline";
         }
-        if (index == 0){
-            return "Neural Network";
-        }
-        else if (index == 2){
-            return "April Tag";
-        }
-        else {
-            return "No pipeline selected";
-        }
+
+        return "Result is needed to determine pipeline index";
     }
 }
