@@ -57,7 +57,7 @@ set CMD_LINE_ARGS=
 set _SKIP=2
 
 :win9xME_args_slurp
-if "xOffset%~1" == "xOffset" goto execute
+if "leftRightOffset%~1" == "leftRightOffset" goto execute
 
 set CMD_LINE_ARGS=%*
 goto execute

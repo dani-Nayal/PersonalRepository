@@ -36,11 +36,11 @@ public class ShowArtifactsFTCDash extends OpMode {
         }
         for (DetectionDescriptor detection : detections){
             fieldOverlay.setFill(detection.getClassName());
-            fieldOverlay.fillCircle(detection.xOffset, detection.yOffset, ARTIFACT_DIAMETER_INCHES / 2);
+            fieldOverlay.fillCircle(detection.leftRightOffset, detection.forwardOffset, ARTIFACT_DIAMETER_INCHES / 2);
 
             packet.put("class", detection.getClassName());
-            packet.put("xOffset", detection.getXOffset());
-            packet.put("yOffset", detection.getYOffset());
+            packet.put("leftRightOffset", detection.getForwardOffset());
+            packet.put("forwardOffset", detection.getForwardOffset());
             packet.put("tx", detection.getTx());
             packet.put("ty", detection.getTy());
             packet.put("corners", detection.getCorners());
