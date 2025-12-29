@@ -57,11 +57,11 @@ public class TestArtifactPositions2 extends OpMode {
         }
         for (DetectionDescriptor detection :  detections) {
             telemetry.addData("class", detection.getClassName());
-            telemetry.addData("xOffset", detection.getXOffset());
-            telemetry.addData("y", detection.getYOffset());
+            telemetry.addData("leftRightOffset", detection.getLeftRightOffset());
+            telemetry.addData("y", detection.getForwardOffset());
             telemetry.addData("tx", detection.getTx());
             telemetry.addData("ty", detection.getTy());
-            telemetry.addData("target pixels xOffset", detection.getTargetPixels()[0]);
+            telemetry.addData("target pixels leftRightOffset", detection.getTargetPixels()[0]);
             telemetry.addData("target pixels y", detection.getTargetPixels()[1]);
         }
         telemetry.update();

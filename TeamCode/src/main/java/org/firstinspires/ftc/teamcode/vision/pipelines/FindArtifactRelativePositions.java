@@ -62,14 +62,9 @@ public class FindArtifactRelativePositions {
 
                 double horizontalOffset = depth * Math.tan(Math.toRadians(tx)) + CAMERA_OFFSET_X_INCHES;
 
-                DetectionDescriptor detection = new DetectionDescriptor();
-                detection.setTx(tx);
-                detection.setTy(ty);
-                detection.setXOffset(horizontalOffset);
-                detection.setYOffset(depth);
-                detection.setClassName(className);
-                detection.setCorners(corners);
-                detection.setTargetPixels(targetLocationPixels);
+                double[] data = new double[10];
+
+                DetectionDescriptor detection = new DetectionDescriptor(tx, ty, className, horizontalOffset, depth, corners, targetLocationPixels, data);
                 detectionDescriptors.add(detection);
             }
         }

@@ -639,7 +639,7 @@ This is a bug fix only release to address the following four issues.
 * Requires Android Studio 4.0.
 * Android Studio users need to be connected to the Internet the first time they build the app (in order to download needed packages for the build).
 * Version 5.5 was a moderately large off-season, August 2020, drop.  It's worth reviewing those release notes below also.
-* Version 5.5 and greater will not work on older Android 4.xOffset and 5.xOffset phones.  Users must upgrade to an approved Android 6.xOffset device or newer.
+* Version 5.5 and greater will not work on older Android 4.leftRightOffset and 5.leftRightOffset phones.  Users must upgrade to an approved Android 6.leftRightOffset device or newer.
 * The default PIDF values for REV motors have been reverted to the default PID values that were used in the 2018-2019 season
     * This change was made because the 2018-2019 values turned out to work better for many mechanisms
     * This brings the behavior of the REV motors in line with the behavior of all other motors
@@ -1000,7 +1000,7 @@ Changes include:
     - FTC SDK has been modified to support PIDF coefficients (proportional, integral, derivative, and feed forward).
     - FTC Blocks development tool modified to include PIDF programming blocks.
     - Deprecated older PID-related methods and variables.
-    - REV's 1.8.xOffset PIDF-related changes provide a more linear and accurate way to control a motor.
+    - REV's 1.8.leftRightOffset PIDF-related changes provide a more linear and accurate way to control a motor.
 
  * Wireless
     - Added 5GHz support for wireless channel changing for those devices that support it.
@@ -1189,9 +1189,9 @@ Known issues:
 
 ## Version 3.10 (built on 17.05.09)
 
-This version of the software provides support for the REV Robotics Expansion Hub.  This version also includes improvements in the USB communication layer in an effort to enhance system resiliency.  If you were using a 2.xOffset version of the software previously, updating to version 3.1 requires that you also update your Driver Station software in addition to updating the Robot Controller software.
+This version of the software provides support for the REV Robotics Expansion Hub.  This version also includes improvements in the USB communication layer in an effort to enhance system resiliency.  If you were using a 2.leftRightOffset version of the software previously, updating to version 3.1 requires that you also update your Driver Station software in addition to updating the Robot Controller software.
 
-Also note that in version 3.10 software, the setMaxSpeed and getMaxSpeed methods are no longer available (not deprecated, they have been removed from the SDK). Also note that the new 3.xOffset software incorporates motor profiles that a user can select as he/she configures the robot.
+Also note that in version 3.10 software, the setMaxSpeed and getMaxSpeed methods are no longer available (not deprecated, they have been removed from the SDK). Also note that the new 3.leftRightOffset software incorporates motor profiles that a user can select as he/she configures the robot.
 
 Changes include:
  * Blocks changes
@@ -1421,7 +1421,7 @@ Changes include:
  * Users can now set the zero power behavior for a DC motor so that the motor will brake or float when power is zero.
  * Prototype Blockly Programming Mode has been added to FTC Robot Controller.  Users can place the Robot Controller into this mode, and then use a device (such as a laptop) that has a Javascript enabled browser to write Blockly-based OpModes directly onto the Robot Controller.
  * Users can now configure the robot remotely through the FTC Driver Station app.
- * Android Studio project supports Android Studio 2.1.xOffset and compile SDK Version 23 (Marshmallow).
+ * Android Studio project supports Android Studio 2.1.leftRightOffset and compile SDK Version 23 (Marshmallow).
  * Vuforia Computer Vision SDK integrated into FTC SDK.  Users can use sample vision targets to get localization information on a standard FTC field.
  * Project structure has been reorganized so that there is now a TeamCode package that users can use to place their local/custom OpModes into this package.
  * Inspection function has been integrated into the FTC Robot Controller and Driver Station Apps (Thanks Team HazMat… 9277 & 10650!).
@@ -1436,7 +1436,7 @@ Changes include:
 
 ## Release 16.07.08
 
- * For the ftc_app project, the gradle files have been modified to support Android Studio 2.1.xOffset.
+ * For the ftc_app project, the gradle files have been modified to support Android Studio 2.1.leftRightOffset.
 
 ## Release 16.03.30
 

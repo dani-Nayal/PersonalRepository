@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.vision.descriptors.AprilTagDescriptor;
+import org.firstinspires.ftc.teamcode.vision.descriptors.ArtifactDescriptor;
 import org.firstinspires.ftc.teamcode.vision.descriptors.DetectionDescriptor;
 import org.firstinspires.ftc.teamcode.vision.pipelines.GetBotPoseMT2;
 import org.firstinspires.ftc.teamcode.vision.pipelines.FindArtifactRelativePositions;
@@ -69,7 +70,20 @@ public class VisionManager {
         return artifactDetector.getDetectionDescriptors();
     }
 
-    public Pose3D getBotPose(){
+    public List<ArtifactDescriptor> getArtifactDescriptors(){
+        if (!limelight.isRunning()){
+            limelight.start();
+        }
+        List<DetectionDescriptor> detectionDescriptors = artifactDetector.getDetectionDescriptors();
+        for (DetectionDescriptor detection: detectionDescriptors){
+            double leftRightOffset = detection.getLeftRightOffset();
+            double forwardOffset = detection.getForwardOffset();
+
+        }
+        return null;
+    }
+
+    public Pose3D getBotPoseAprilTags(){
         if (!limelight.isRunning()){
             limelight.start();
         }
