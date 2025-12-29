@@ -15,7 +15,7 @@ public class TestArtifactPositions extends OpMode {
 
     @Override
     public void init(){
-        visionManager = new VisionManager(hardwareMap);
+        visionManager = new VisionManager(hardwareMap, telemetry);
     }
 
     @Override

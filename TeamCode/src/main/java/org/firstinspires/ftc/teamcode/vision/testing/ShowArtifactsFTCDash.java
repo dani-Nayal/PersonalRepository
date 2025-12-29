@@ -18,7 +18,7 @@ public class ShowArtifactsFTCDash extends OpMode {
     VisionManager visionManager;
     @Override
     public void init(){
-        visionManager = new VisionManager(hardwareMap);
+        visionManager = new VisionManager(hardwareMap, telemetry);
         ftcDashboard = FtcDashboard.getInstance();
     }
 

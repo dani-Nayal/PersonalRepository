@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
 import  com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.vision.descriptors.AprilTagDescriptor;
 import org.firstinspires.ftc.teamcode.vision.descriptors.DetectionDescriptor;
@@ -38,8 +38,10 @@ public class VisionManager {
     Limelight3A limelight;
     IMU imu;
     List<String> queryClasses = new ArrayList<>();
-    public VisionManager(HardwareMap hardwareMap){
+    Telemetry telemetry;
+    public VisionManager(HardwareMap hardwareMap, Telemetry telemetry){
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        this.telemetry = telemetry;
         limelight.setPollRateHz(11);
         imu = hardwareMap.get(IMU.class, "imu");
         queryClasses.add("purple");
@@ -60,6 +62,10 @@ public class VisionManager {
             limelight.start();
         }
         limelight.pipelineSwitch(NN_PIPELINE_INDEX);
+        telemetry.addData("pipeline index", limelight.getStatus().getPipelineIndex());
+        telemetry.addData("pipeline type", limelight.getStatus().getPipelineType());
+        telemetry.addData("isRunning", limelight.isRunning());
+        telemetry.update();
         return artifactDetector.getDetectionDescriptors();
     }
 
@@ -67,6 +73,11 @@ public class VisionManager {
         if (!limelight.isRunning()){
             limelight.start();
         }
+        limelight.pipelineSwitch(APRIL_TAGS_PIPELINE_INDEX);
+        telemetry.addData("pipeline index", limelight.getStatus().getPipelineIndex());
+        telemetry.addData("pipeline type", limelight.getStatus().getPipelineType());
+        telemetry.addData("isRunning", limelight.isRunning());
+        telemetry.update();
         return llLocalizer.getBotPoseMT2();
     }
 
@@ -75,26 +86,24 @@ public class VisionManager {
             limelight.start();
         }
         limelight.pipelineSwitch(APRIL_TAGS_PIPELINE_INDEX);
+        telemetry.addData("pipeline index", limelight.getStatus().getPipelineIndex());
+        telemetry.addData("pipeline type", limelight.getStatus().getPipelineType());
+        telemetry.addData("isRunning", limelight.isRunning());
+        telemetry.update();
         return aprilTagDetector.getAprilTagDescriptors();
     }
     public void stopLimelight(){
         limelight.stop();
     }
 
-    public String getCurrentPipeline(){
-        if (!limelight.isRunning()){
+    public String getCurrentPipelineType() {
+        if (!limelight.isRunning()) {
             limelight.start();
         }
-        LLResult result = limelight.getLatestResult();
-        if (result != null && result.isValid()){
+        String pipelineName = limelight.getStatus().getPipelineType();
 
-            int index = result.getPipelineIndex();
-
-            if (index == NN_PIPELINE_INDEX) return "Neural Network";
-            else if (index == APRIL_TAGS_PIPELINE_INDEX) return "April Tag";
-            else return "Unknown Pipeline";
-        }
-
-        return "Result is needed to determine pipeline index";
+        if (pipelineName.isEmpty()) return "";
+        else return limelight.getStatus().getPipelineType();
     }
+
 }
