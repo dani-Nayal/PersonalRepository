@@ -9,9 +9,9 @@ import org.firstinspires.ftc.teamcode.vision.descriptors.AprilTagDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TxTyAprilTag {
+public class AprilTagDetector {
     Limelight3A limelight;
-    public TxTyAprilTag(Limelight3A limelight){
+    public AprilTagDetector(Limelight3A limelight){
         this.limelight = limelight;
     }
     public List<AprilTagDescriptor> getAprilTagDescriptors(){

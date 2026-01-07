@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.vision.descriptors.ArtifactDescriptor;
 import org.firstinspires.ftc.teamcode.vision.descriptors.DetectionDescriptor;
 import org.firstinspires.ftc.teamcode.vision.pipelines.GetBotPoseMT2;
 import org.firstinspires.ftc.teamcode.vision.pipelines.FindArtifactRelativePositions;
-import org.firstinspires.ftc.teamcode.vision.pipelines.TxTyAprilTag;
+import org.firstinspires.ftc.teamcode.vision.pipelines.AprilTagDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class VisionManager {
             {0.0, 0.0, 1.0}
     };
     FindArtifactRelativePositions artifactDetector;
-    TxTyAprilTag aprilTagDetector;
+    AprilTagDetector aprilTagDetector;
     GetBotPoseMT2 llLocalizer;
     Limelight3A limelight;
     IMU imu;
@@ -54,7 +54,7 @@ public class VisionManager {
                 CAMERA_OFFSET_Y_INCHES,
                 CAMERA_DOWNWARD_PITCH_DEGREES,
                 K);
-        aprilTagDetector = new TxTyAprilTag(limelight);
+        aprilTagDetector = new AprilTagDetector(limelight);
         llLocalizer = new GetBotPoseMT2(limelight, imu);
     }
 
@@ -120,4 +120,14 @@ public class VisionManager {
         else return limelight.getStatus().getPipelineType();
     }
 
+    public int getObeliskID(){
+        List<AprilTagDescriptor> tags = getAprilTagDescriptors();
+        for (AprilTagDescriptor tag : tags){
+            int id = tag.getId();
+            if (id == 21 || id == 22 || id == 33){
+                return id;
+            }
+        }
+        return 21; // Default when the obelisk is not detected
+    }
 }

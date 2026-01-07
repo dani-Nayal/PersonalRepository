@@ -12,7 +12,7 @@ public class TestRelativeToGlobal {
     final double CAMERA_OFFSET_X_INCHES = 0; // Increases to the right from reference point
     final double CAMERA_OFFSET_Y_INCHES = 0;
 
-    DetectionDescriptor detection = new DetectionDescriptor(0, 0, "green", 5, 6)
+    DetectionDescriptor detection = new DetectionDescriptor(0, 0, "green");
     Pose3D botPose = new Pose3D(new Position(DistanceUnit.INCH, 0, 0, 0, 0), new YawPitchRollAngles(AngleUnit.DEGREES, 90, 0, 0, 0));
 
     public static void main(String[] args){
