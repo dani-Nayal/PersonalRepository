@@ -38,7 +38,6 @@ public class DetectionDescriptor {
         this.className = className;
     }
 
-    )
     double tx;
     double ty;
     String className;
