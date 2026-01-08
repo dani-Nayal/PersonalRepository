@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision.pipelines;
 
+import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.IMU;

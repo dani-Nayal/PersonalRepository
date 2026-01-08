@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import  com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
+import com.pedropathing.geometry.CoordinateSystem;
+import com.pedropathing.geometry.Pose;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -70,7 +73,7 @@ public class VisionManager {
         return artifactDetector.getDetectionDescriptors();
     }
 
-    public List<ArtifactDescriptor> getArtifactDescriptors(){
+    public List<ArtifactDescriptor> getArtifactDescriptors(){ // Converts relative positions to absolute
         if (!limelight.isRunning()){
             limelight.start();
         }
@@ -83,7 +86,7 @@ public class VisionManager {
         return null;
     }
 
-    public Pose3D getBotPoseAprilTags(){
+    public Pose getBotPoseAprilTags(){
         if (!limelight.isRunning()){
             limelight.start();
         }
@@ -92,7 +95,8 @@ public class VisionManager {
         telemetry.addData("pipeline type", limelight.getStatus().getPipelineType());
         telemetry.addData("isRunning", limelight.isRunning());
         telemetry.update();
-        return llLocalizer.getBotPoseMT2();
+        Pose3D ftcPose = llLocalizer.getBotPoseMT2();
+        return new Pose(ftcPose.getPosition().x, ftcPose.getPosition().y, ftcPose.getOrientation().getYaw());
     }
 
     public List<AprilTagDescriptor> getAprilTagDescriptors(){ // Returns a list of all detections from a single frame
