@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.vision.testing;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -12,14 +16,19 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.vision.Vision;
+import org.firstinspires.ftc.teamcode.vision.descriptors.ArtifactDescriptor;
+
+import java.util.List;
 
 @TeleOp
-public class TestAprilTags extends OpMode {
+@Config
+public class TestArtifactDetection extends OpMode {
+public static double ARTIFACT_CENTER_OFFSET = 2.5;
     Vision vision;
     GoBildaPinpointDriver pinpoint;
-    double initXPedro = 0; // These should be the bottom left corner of the robot
-    double initYPedro = 0;
-    double initHeadingPedroDegrees = 90;
+    double initXPedro = 72;
+    double initYPedro = 144;
+    double initHeadingPedroDegrees = 270;
     double robotWidth;
     double robotLength;
     Pose3D cameraPose;
@@ -28,10 +37,12 @@ public class TestAprilTags extends OpMode {
         STRAFER
     }
     ROBOTS currentRobot = ROBOTS.STRAFER;
+    FtcDashboard dashboard;
     Pose2D initPosePinpoint;
 
     @Override
-    public void init(){
+    public void init() {
+        dashboard = FtcDashboard.getInstance();
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
         if (currentRobot == ROBOTS.INFERNO){
@@ -59,60 +70,34 @@ public class TestAprilTags extends OpMode {
     }
 
     @Override
-    public void loop(){
+    public void loop() {
         pinpoint.update();
 
+        TelemetryPacket packet = new TelemetryPacket();
+        Canvas fieldOverlay = packet.fieldOverlay();
+
         Pose2D botPosePinpoint = pinpoint.getPosition();
-
-        telemetry.addData("raw pinpoint x", botPosePinpoint.getX(DistanceUnit.INCH));
-        telemetry.addData("raw pinpoint y", botPosePinpoint.getY(DistanceUnit.INCH));
-        telemetry.addData("init pinpoint pos", initPosePinpoint);
-
         Pose botPosePedro = vision.standardToPedroPose(botPosePinpoint);
 
-        telemetry.addData("bot pose x", botPosePedro.getX());
-        telemetry.addData("bot pose y", botPosePedro.getY());
-        telemetry.addData("bot pose heading", vision.pinpointToStandardYaw(Math.toDegrees(botPosePedro.getHeading())));
+        List<ArtifactDescriptor> artifacts = vision.getArtifactDescriptors(botPosePedro);
 
-        Integer id = vision.getObeliskID();
-        Pose botPoseMT1 = vision.getBotPoseMT1();
-        Pose botPoseMT2 = vision.getBotPoseMT2(pinpoint.getHeading(AngleUnit.DEGREES));
-        Pose botPoseMT2WithMT1 = vision.getBotPoseMT2WithMT1();
+        if (artifacts != null) {
+            artifacts = vision.pedroToStandardPoseArtifacts(artifacts);
 
-        if (id != null){
-            telemetry.addData("obelisk id", id);
-        }
-        else {
-            telemetry.addLine("id is null");
-        }
+            for (ArtifactDescriptor artifact : artifacts) {
+                double x = artifact.getX();
+                double y = artifact.getY();
+                String className = artifact.getClassName();
 
-        if (botPoseMT1 != null){
-            telemetry.addData("botPoseMT1 x", botPoseMT1.getX());
-            telemetry.addData("botPoseMT1 y", botPoseMT1.getY());
-            telemetry.addData("botPoseMT1 heading", Math.toDegrees(botPoseMT1.getHeading()));
-        }
-        else {
-            telemetry.addLine("MT1 is null");
-        }
+                packet.put("x", x);
+                packet.put("y", y + ARTIFACT_CENTER_OFFSET);
+                packet.put("className", className);
 
-        if (botPoseMT2 != null){
-            telemetry.addData("botPoseMT2 x", botPoseMT2.getX());
-            telemetry.addData("botPoseMT2 y", botPoseMT2.getY());
-            telemetry.addData("botPoseMT2 heading", Math.toDegrees(botPoseMT2.getHeading()));
-        }
-        else {
-            telemetry.addLine("MT2 is null");
-        }
+                fieldOverlay.setFill(className);
+                fieldOverlay.fillCircle(x, y, 2.5);
 
-        if (botPoseMT2WithMT1 != null){
-            telemetry.addData("botPoseMT2 with MT1 x", botPoseMT2WithMT1.getX());
-            telemetry.addData("botPoseMT2 with MT1 y", botPoseMT2WithMT1.getY());
-            telemetry.addData("botPoseMT2 with MT1 heading", Math.toDegrees(botPoseMT2WithMT1.getHeading()));
+            }
+            dashboard.sendTelemetryPacket(packet);
         }
-        else {
-            telemetry.addLine("MT2 with MT1 is null");
-        }
-
-        telemetry.update();
     }
 }
